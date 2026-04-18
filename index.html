@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sitesnap</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#fff;color:#111}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0}
+.menu-icon{font-size:26px;cursor:pointer}
+.sidebar{position:fixed;top:0;left:-260px;width:260px;height:100%;background:#111;color:#fff;padding:25px;transition:0.4s}
+.sidebar a{display:block;margin:18px 0;color:#fff;text-decoration:none}
+.close-btn{cursor:pointer;margin-bottom:20px;display:block}
+.hero{text-align:center;padding:90px 20px;animation:fadeIn 1s}
+.hero h1{font-size:40px}
+.btn{background:#25D366;color:#fff;padding:12px 25px;border:none;border-radius:10px;cursor:pointer;transition:0.3s}
+.btn:hover{transform:scale(1.05)}
+.plans{display:flex;justify-content:center;gap:25px;padding:50px;flex-wrap:wrap}
+.card{border:1px solid #eee;border-radius:15px;padding:25px;width:250px;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.05);animation:fadeUp 1s}
+.card:hover{transform:translateY(-10px)}
+.section{padding:60px;text-align:center}
+input{width:85%;padding:10px;margin:5px;border-radius:8px;border:1px solid #ccc}
+.pix-area{display:none;margin-top:15px}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:500}
+.modal-content{background:#fff;padding:25px;border-radius:12px;width:90%;max-width:400px;animation:fadeUp 0.5s}
+.close-modal{cursor:pointer;float:right}
+.etapa{margin:10px 0;padding:10px;border-left:4px solid #25D366;background:#f9f9f9;border-radius:6px;text-align:left}
+.avaliacao{margin:10px 0;padding:10px;background:#f5f5f5;border-radius:8px;animation:fadeUp 0.5s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+</style></head>
+<body>
+<header>
+<span class="menu-icon" onclick="abrirMenu()">☰</span>
+<h2>Sitesnap</h2>
+</header><div class="sidebar" id="menu">
+<span class="close-btn" onclick="fecharMenu()">✖ Fechar</span>
+<a onclick="abrirModal('pix')">Pix</a>
+<a onclick="abrirModal('avaliacao')">Avaliações</a>
+<a onclick="abrirModal('suporte')">Suporte</a>
+</div><section class="hero">
+<h1>Criação de Sites Profissionais</h1>
+<p>Escolha seu plano</p>
+<a href="https://wa.me/5547991002067" target="_blank"><button class="btn">WhatsApp</button></a>
+</section><section class="plans">
+<div class="card"><h3>Básico</h3><h2>R$15</h2><button class="btn" onclick="comprar(15)">Comprar</button></div>
+<div class="card"><h3>Médio</h3><h2>R$25</h2><button class="btn" onclick="comprar(25)">Comprar</button></div>
+<div class="card"><h3>Premium</h3><h2>R$45</h2><button class="btn" onclick="comprar(45)">Comprar</button></div>
+</section><section id="compra" class="section" style="display:none">
+<h2>Pagamento via Pix</h2>
+<input id="nome" placeholder="Seu nome"><br>
+<input id="zap" placeholder="Seu WhatsApp"><br>
+<input id="email" placeholder="Seu Email"><br>
+<input id="cpf" placeholder="Seu CPF"><br>
+<button class="btn" onclick="confirmar()">Confirmar Cadastro</button>
+<div class="pix-area" id="pixArea">
+<p id="pixKey"></p>
+<img id="qr">
+<br><br>
+<a id="enviarZap" target="_blank"><button class="btn">Enviar comprovante</button></a>
+</div>
+</section><!-- MODAIS --><div class="modal" id="pix"><div class="modal-content">
+<span class="close-modal" onclick="fecharModal('pix')">✖</span>
+<h3>Como funciona o Pix</h3>
+<div class="etapa">1. Escolha seu plano</div>
+<div class="etapa">2. Preencha seus dados</div>
+<div class="etapa">3. Faça o pagamento via Pix</div>
+<div class="etapa">4. Envie o comprovante</div>
+<div class="etapa">5. Receba seu site</div>
+<p>100% seguro e profissional</p>
+</div></div><div class="modal" id="avaliacao"><div class="modal-content">
+<span class="close-modal" onclick="fecharModal('avaliacao')">✖</span>
+<h3>Avaliações</h3>
+<div class="avaliacao">Muito bom, site entregue rápido</div>
+<div class="avaliacao">Atendimento excelente, recomendo</div>
+<div class="avaliacao">Ficou profissional mesmo</div>
+</div></div><div class="modal" id="suporte"><div class="modal-content"><span class="close-modal" onclick="fecharModal('suporte')">✖</span><h3>Suporte</h3><p>Fale no WhatsApp para ajuda.</p></div></div><script>
+let valorSelecionado = 0;
+
+function comprar(valor){
+valorSelecionado = valor;
+document.getElementById('compra').style.display='block';
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+
+function validarCPF(cpf){
+cpf = cpf.replace(/\D/g,'');
+return cpf.length === 11;
+}
+
+function confirmar(){
+let nome = document.getElementById('nome').value;
+let zap = document.getElementById('zap').value;
+let email = document.getElementById('email').value;
+let cpf = document.getElementById('cpf').value;
+
+if(!nome || !zap || !email || !cpf){alert('Preencha tudo'); return;}
+if(!validarCPF(cpf)){alert('CPF inválido'); return;}
+
+let chave = "109.039.185-44";
+document.getElementById('pixKey').innerText = "Chave Pix: " + chave + " | Valor: R$"+valorSelecionado;
+
+document.getElementById('qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIX:${chave}|VALOR:${valorSelecionado}`;
+
+let msg = `Olá, paguei R$${valorSelecionado}. Nome: ${nome}`;
+document.getElementById('enviarZap').href = `https://wa.me/5547991002067?text=${encodeURIComponent(msg)}`;
+
+document.getElementById('pixArea').style.display='block';
+}
+
+function abrirMenu(){document.getElementById('menu').style.left='0'}
+function fecharMenu(){document.getElementById('menu').style.left='-260px'}
+function abrirModal(id){fecharMenu();document.getElementById(id).style.display='flex'}
+function fecharModal(id){document.getElementById(id).style.display='none'}
+</script></body>
+</html>pix
